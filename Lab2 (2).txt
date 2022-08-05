@@ -1,0 +1,287 @@
+SQL> SET PAGESIZE 100
+SQL> SET LINESIZE 200
+SQL> --Question#1
+SQL> SELECT c.company, s.description, m.manu_name, i.quantity,i.total_price
+  2  FROM customer c
+  3  INNER JOIN orders o ON c.customer_num = o.customer_num
+  4  INNER JOIN items i ON o.order_num = i.order_num
+  5  INNER JOIN stock s ON i.stock_num = s.stock_num
+  6  INNER JOIN manufact m ON s.manu_code = m.manu_code
+  7  ORDER BY company, description;
+
+COMPANY              DESCRIPTION     MANU_NAME         QUANTITY TOTAL_PRICE                                                                                                                             
+-------------------- --------------- --------------- ---------- -----------                                                                                                                             
+AA athletics         baseball gloves Hero                     1         450                                                                                                                             
+AA athletics         volleyball      Anza                     1         840                                                                                                                             
+AA athletics         volleyball net  Anza                     5         100                                                                                                                             
+Alls Sports Supplies baseball bat    Husky                    1         240                                                                                                                             
+Alls Sports Supplies football        Husky                    1         960                                                                                                                             
+Kids Korner          baseball        Hero                     1         126                                                                                                                             
+Kids Korner          baseball bat    Husky                    1         240                                                                                                                             
+Kids Korner          baseball gloves Hero                     1         250                                                                                                                             
+Kids Korner          basketball      Hero                     1         600                                                                                                                             
+Kids Korner          football        Husky                    1         480                                                                                                                             
+Kids Korner          volleyball      Anza                     1         840                                                                                                                             
+Kids Korner          volleyball net  Anza                    10         200                                                                                                                             
+Olympic City         tennis ball     Smith                    1          36                                                                                                                             
+Olympic City         tennis ball     Smith                    1          48                                                                                                                             
+Olympic City         tennis racquet  Norge                   10         198                                                                                                                             
+Olympic City         tennis racquet  Norge                   10         280                                                                                                                             
+Play Ball!           baseball gloves Hero                     1         250                                                                                                                             
+Play Ball!           tennis ball     Smith                    1          48                                                                                                                             
+Play Ball!           tennis ball     Smith                    1          36                                                                                                                             
+Play Ball!           tennis ball     Smith                    1          48                                                                                                                             
+Play Ball!           tennis ball     Smith                    1          36                                                                                                                             
+Play Ball!           tennis racquet  Norge                    1        19.8                                                                                                                             
+Play Ball!           tennis racquet  Norge                    5          99                                                                                                                             
+Play Ball!           tennis racquet  Norge                    5          99                                                                                                                             
+Play Ball!           volleyball      Anza                     1         840                                                                                                                             
+Play Ball!           volleyball net  Anza                     2          40                                                                                                                             
+Play Ball!           volleyball net  Anza                     1          20                                                                                                                             
+Runners and Others   tennis ball     Smith                    1          48                                                                                                                             
+Runners and Others   tennis ball     Smith                    1          36                                                                                                                             
+Runners and Others   tennis racquet  Norge                    5          99                                                                                                                             
+Runners and Others   tennis racquet  Norge                    5         125                                                                                                                             
+Runners and Others   tennis racquet  Norge                    5         190                                                                                                                             
+Sports Center        baseball gloves Hero                     1         450                                                                                                                             
+Watson and Son       baseball        Hero                     1         126                                                                                                                             
+Watson and Son       baseball bat    Husky                    1         240                                                                                                                             
+Watson and Son       baseball gloves Hero                     1         960                                                                                                                             
+Watson and Son       baseball gloves Hero                     1         800                                                                                                                             
+Watson and Son       football        Husky                    1         480                                                                                                                             
+Watson and Son       football        Husky                    1         960                                                                                                                             
+
+39 rows selected.
+
+SQL> --Question#2
+SQL> --A)
+SQL> SELECT COUNT(ship_date) AS "Number of Orders Shipped"
+  2  FROM customer c
+  3  INNER JOIN orders o ON c.customer_num = o.customer_num
+  4  INNER JOIN items i ON o.order_num = i.order_num
+  5  WHERE ship_date BETWEEN '25-DEC-19' AND '05-JAN-20';
+
+Number of Orders Shipped                                                                                                                                                                                
+------------------------                                                                                                                                                                                
+                      10                                                                                                                                                                                
+
+SQL> --B)
+SQL> SELECT o.order_num,o.order_date,c.company,o.ship_date
+  2  FROM customer c
+  3  INNER JOIN orders o ON c.customer_num = o.customer_num
+  4  INNER JOIN items i ON o.order_num = i.order_num
+  5  WHERE ship_date = '08-JAN-20'
+  6  ORDER BY company, order_num;
+
+ ORDER_NUM ORDER_DAT COMPANY              SHIP_DATE                                                                                                                                                     
+---------- --------- -------------------- ---------                                                                                                                                                     
+      1150 03-JAN-20 AA athletics         08-JAN-20                                                                                                                                                     
+      1130 03-JAN-20 Play Ball!           08-JAN-20                                                                                                                                                     
+      1130 03-JAN-20 Play Ball!           08-JAN-20                                                                                                                                                     
+      1130 03-JAN-20 Play Ball!           08-JAN-20                                                                                                                                                     
+      1130 03-JAN-20 Play Ball!           08-JAN-20                                                                                                                                                     
+
+SQL> --Question#3
+SQL> SELECT COUNT(DISTINCT c.fname) AS "Customers with NO Order Placed"
+  2  FROM customer c
+  3  LEFT JOIN orders o ON c.customer_num = o.customer_num
+  4  WHERE o.order_num IS NULL
+  5  ORDER BY c.fname;
+
+Customers with NO Order Placed                                                                                                                                                                          
+------------------------------                                                                                                                                                                          
+                             9                                                                                                                                                                          
+
+SQL> --Question#4
+SQL> SELECT UNIQUE c.customer_num, s.stock_num, s.description
+  2  FROM customer c
+  3  INNER JOIN orders o ON c.customer_num = o.customer_num
+  4  INNER JOIN items i ON o.order_num = i.order_num
+  5  INNER JOIN stock s ON i.stock_num = s.stock_num
+  6  WHERE s.description LIKE '%ball%'
+  7  ORDER BY customer_num;
+
+CUSTOMER_NUM  STOCK_NUM DESCRIPTION                                                                                                                                                                     
+------------ ---------- ---------------                                                                                                                                                                 
+        1010         30 baseball bat                                                                                                                                                                    
+        1010         40 football                                                                                                                                                                        
+        1040         10 baseball gloves                                                                                                                                                                 
+        1040         60 tennis ball                                                                                                                                                                     
+        1040         80 volleyball                                                                                                                                                                      
+        1040         90 volleyball net                                                                                                                                                                  
+        1060         10 baseball gloves                                                                                                                                                                 
+        1060         20 baseball                                                                                                                                                                        
+        1060         30 baseball bat                                                                                                                                                                    
+        1060         40 football                                                                                                                                                                        
+        1100         10 baseball gloves                                                                                                                                                                 
+        1100         80 volleyball                                                                                                                                                                      
+        1100         90 volleyball net                                                                                                                                                                  
+        1110         10 baseball gloves                                                                                                                                                                 
+        1120         60 tennis ball                                                                                                                                                                     
+        1160         60 tennis ball                                                                                                                                                                     
+        1170         10 baseball gloves                                                                                                                                                                 
+        1170         20 baseball                                                                                                                                                                        
+        1170         30 baseball bat                                                                                                                                                                    
+        1170         40 football                                                                                                                                                                        
+        1170         70 basketball                                                                                                                                                                      
+        1170         80 volleyball                                                                                                                                                                      
+        1170         90 volleyball net                                                                                                                                                                  
+
+23 rows selected.
+
+SQL> --Question#5
+SQL> CREATE TABLE Professor
+  2  (Prof_ID  NUMBER(3) CONSTRAINT pk_Professor PRIMARY KEY,
+  3  Prof_Lname VARCHAR2(15) NOT NULL,
+  4  Prof_Hiredate DATE,
+  5  Prof_Sal  NUMBER(8,2),
+  6  Prof_Dept CHAR(6)
+  7  );
+
+Table created.
+
+SQL> DESCRIBE Professor
+ Name                     Null?    Type
+------------------------ -------- -----------------------------------------------------------------
+ PROF_ID                  NOT NULL NUMBER(3)
+ PROF_LNAME               NOT NULL VARCHAR2(15)
+ PROF_HIREDATE                     DATE
+ PROF_SAL                          NUMBER(8,2)
+ PROF_DEPT                         CHAR(6)
+
+SQL> CREATE TABLE Student
+  2  (Stu_ID  NUMBER(4) Constraint pk_Student PRIMARY KEY,
+  3  Stu_Lname VARCHAR2(15)  NOT NULL,
+  4  Stu_Major CHAR(6),
+  5  Stu_CredHrs NUMBER(4),
+  6  Stu_GradePts NUMBER(5),
+  7  Prof_ID NUMBER(3),
+  8  CONSTRAINT fk_Student_Prof_ID FOREIGN KEY(Prof_ID)
+  9  REFERENCES Professor
+ 10  );
+
+Table created.
+
+SQL> DESCRIBE Student
+ Name              Null?    Type
+ ---------------- ---------- -----------------------------------------------------------
+ PROF_ID           NOT NULL NUMBER(3)
+ STU_LNAME         NOT NULL VARCHAR2(15)
+ STU_MAJOR                  CHAR(6)
+ STU_CREDHRS                NUMBER(4)
+ STU_GRADEPTS               NUMBER(5)
+ PROF_ID                    NUMBER(3)
+
+SQL> --Question#6
+SQL> INSERT INTO Professor
+  2  VALUES (1223,'Hilbert',TO_DATE('20-MAY-1992','DD-MON-YYYY'), 58000.00,'MATH');
+
+1 row created.
+
+SQL> INSERT INTO professor
+  2  VALUES (243,'Newell',TO_DATE('15-JUL-1997','DD-MON-YYYY'), 65500.00,'CMPSCI');
+
+1 row created.
+
+SQL> INSERT INTO professor
+  2  VALUES (389,'Lessing',TO_DATE('04-APR-1988','DD-MON-YYYY'), 40250.00,'ENG');
+
+1 row created.
+
+SQL> SELECT * FROM Professor;
+
+   PROF_ID PROF_LNAME      PROF_HIRE   PROF_SAL PROF_D
+---------- --------------- --------- ---------- ------
+       123 Hilbert         20-MAY-92      58000 MATH  
+       243 Newell          15-JUL-97      65500 CMPSCI
+       389 Lessing         04-APR-88      40250 ENG
+
+SQL> INSERT INTO Student
+  2  VALUES (2001, 'Parker', 'CMPSCI', 52, 160, 243);
+
+1 row created.
+
+SQL> INSERT INTO Student
+  2  VALUES (2166, 'Smith', 'ENG', 30, 75, 389);
+
+1 row created.
+
+SQL> INSERT INTO Student
+  2  VALUES (3200, 'Garcia', 'MATH', 62, 248, 123);
+INSERT INTO Student
+
+1 row created.
+
+SQL> INSERT INTO Student
+  2  VALUES (4520, 'Smith', 'CMPSCI', 45, 157, NULL);
+
+1 row created.
+
+SQL> SELECT * FROM Student;
+
+   STU_ID STU_LNAME       STU_MA STU_CREDHRS STU_GRADEPTS    PROF_ID
+---------- --------------- ------ ----------- ------------ ----------
+      2001 Parker          CMPSCI          52          160        243
+      2166 Smith           ENG             30           75        389
+      3200 Garcia          MATH            62          248        123
+      4520 Smith           CMPSCI          45          157      
+
+SQL> --Question#7
+SQL> --A)
+SQL> DELETE FROM Professor WHERE prof_ID = 389;
+DELETE FROM Professor WHERE prof_ID = 389
+*
+ERROR at line 1:
+ORA-02292: integrity constraint (ARON_GHEBREKIDAN.FK_STUDENT_PROF_ID) violated
+- child record found
+
+SQL> --B)
+SQL> DELETE FROM Student WHERE stu_id = 2166;
+
+1 row deleted.
+
+SQL> SELECT * FROM Student;
+
+    STU_ID STU_LNAME       STU_MA STU_CREDHRS STU_GRADEPTS    PROF_ID
+---------- --------------- ------ ----------- ------------ ----------
+      2001 Parker          CMPSCI          52          160        243
+      4520 Smith           CMPSCI          45          157
+
+SQL> --C)
+SQL> DELETE FROM Professor WHERE prof_ID = 389;
+
+1 rows deleted.
+
+SQL> SELECT * FROM Professor;
+
+   PROF_ID PROF_LNAME      PROF_HIRE   PROF_SAL PROF_D
+---------- --------------- --------- ---------- ------
+       243 Newell          15-JUL-97     65500  CMPSCI
+--The first attemp was not successful because professor table was dependent on the student table 
+--we cannot delete a row with out deleting the reference
+
+SQL> --Question#8
+SQL> --A)
+SQL> UPDATE Student
+  2  SET prof_ID = 1223
+  3  WHERE stu_id = 4520;
+
+1 rows updated.
+
+SQL> SELECT * FROM Student;
+
+    STU_ID STU_LNAME       STU_MA STU_CREDHRS STU_GRADEPTS    PROF_ID
+---------- --------------- ------ ----------- ------------ ----------
+      4520 Smith           CMPSCI          45          157       1223
+
+SQL> --B)
+SQL> UPDATE Professor
+  2  SET prof_sal = prof_sal *2.5;
+
+1 row updated.
+
+SQL> SELECT * FROM Professor;
+
+   PROF_ID PROF_LNAME      PROF_HIRE   PROF_SAL PROF_D
+---------- --------------- --------- ---------- ------
+       243 Newell          15-JUL-97     163750 CMPSCI
